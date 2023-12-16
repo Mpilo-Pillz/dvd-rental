@@ -1,4 +1,4 @@
-package com.dvdrental.springbootdvdrentalapi.Customer;
+package com.dvdrental.springbootdvdrentalapi;
 
 import javax.persistence.*;
 import java.util.Date;
