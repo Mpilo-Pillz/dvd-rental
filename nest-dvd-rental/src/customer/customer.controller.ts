@@ -23,6 +23,11 @@ export class CustomerController {
     return this.customerService.findAll();
   }
 
+  @Get('/fullNameAndEmail')
+  getCustomerFullNamesAndEmail() {
+    return this.customerService.getCustomerFullNamesAndEmail();
+  }
+
   @Get(':id')
   findOne(@Param('id') id: string) {
     return this.customerService.findOne(+id);
