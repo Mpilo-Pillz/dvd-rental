@@ -1,1 +1,5 @@
-GET http://localhost:3000/customer/
+### Get all customers
+GET http://localhost:3200/customer/
+
+### Get customer full name and email by email
+GET http://localhost:3200/customer/fullNameAndEmail

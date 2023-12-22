@@ -13,4 +13,14 @@ export class PrismaService
   async onModuleDestroy() {
     await this.$disconnect();
   }
+
+  async findCustomerFullNames(email: string) {
+    return this
+      .$queryRaw`SELECT first_name,last_name,email FROM customer WHERE email = ${email}`;
+  }
+
+  async updateCustomerStatus(customerId: number, status: boolean) {
+    return this
+      .$executeRaw`UPDATE customer SET active = ${status} WHERE customer_id = ${customerId}`;
+  }
 }
