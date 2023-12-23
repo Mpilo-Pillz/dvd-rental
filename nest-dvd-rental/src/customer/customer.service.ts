@@ -37,4 +37,8 @@ export class CustomerService {
       'linda.williams@sakilacustomer.org',
     );
   }
+
+  async getStoresWithCustomers() {
+    return this.prisma.getdistincStoresWithCustomers();
+  }
 }
