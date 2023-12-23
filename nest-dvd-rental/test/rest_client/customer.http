@@ -3,3 +3,6 @@ GET http://localhost:3200/customer/
 
 ### Get customer full name and email by email
 GET http://localhost:3200/customer/fullNameAndEmail
+
+### Get stores with customers
+GET http://localhost:3200/customer/storesWithCustomers
