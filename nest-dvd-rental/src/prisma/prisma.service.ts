@@ -23,4 +23,13 @@ export class PrismaService
     return this
       .$executeRaw`UPDATE customer SET active = ${status} WHERE customer_id = ${customerId}`;
   }
+
+  async getdistincStoresWithCustomers() {
+    return this.$executeRaw`SELECT DISTINCT store_id from customer`;
+  }
 }
+
+// SELECT * from film;
+// SELECT DISTINCT rating from film;
+// SELECT * FROM customer
+// SELECT DISTINCT store_id from customer;
