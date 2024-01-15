@@ -14,7 +14,7 @@ public class CustomerService {
     private final CustomerRepository customerRepository;
 
     @Autowired
-    public CustomerService(CustomerRepository customerRepository) {
+    public CustomerService(CustomerRepo customerRepository) {
         this.customerRepository = customerRepository;
     }
 //    public void mpilo() {
