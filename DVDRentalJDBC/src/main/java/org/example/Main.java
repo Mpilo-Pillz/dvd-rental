@@ -58,7 +58,8 @@ public class Main {
 //            simpleInsertWithExcecuteUpdate(connection);
 //            simpleReadWithExecute(connection);
 //            simpleInsertWithParameterizedExcecuteUpdate(connection);
-            simpleReadWithParameterizedExecuteQuery(connection);
+//            simpleReadWithParameterizedExecuteQuery(connection);
+                            simpleReadWithParameterizedExecuteQueryAnCountIndex(connection);
         } catch (SQLException e) {
     throw new RuntimeException(e);
         }
@@ -189,7 +190,31 @@ private static void simpleInsertWithParameterizedExcecuteUpdate(Connection conne
         ResultSet resultSet = statement.executeQuery();
 
         while(resultSet.next()) {
-            System.out.println(".");
+//            String first_name = resultSet.getString(1);
+//            String last_name = resultSet.getString(2);
+            //            System.out.println(first_name + " " + last_name + " is in the db order matters");
+
+            String firstName = resultSet.getString("first_name");
+            String lastName = resultSet.getString("last_name");
+//            int last_name = resultSet.getInt(2);
+
+
+            System.out.println(firstName + " " + lastName + " is in the db");
+        }
+        System.out.println();
+    }
+
+    // READ SELECT
+    private static void simpleReadWithParameterizedExecuteQueryAnCountIndex(Connection connection) throws SQLException {
+        String sql = "select count(*) as count from staff";
+
+        PreparedStatement statement = connection.prepareStatement(sql);
+
+        ResultSet resultSet = statement.executeQuery();
+
+        if(resultSet.next()) {
+//            int last_name = resultSet.getInt(2);
+            System.out.println("The number of staff employed is " + resultSet.getInt("count"));
         }
         System.out.println();
     }
