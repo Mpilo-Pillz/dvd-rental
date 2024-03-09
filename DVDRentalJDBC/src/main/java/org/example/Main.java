@@ -28,9 +28,11 @@ public class Main {
 //                        simpleUpdateWithExcecuteUpdate(connection);
 //                        simpleReadWithExecuteQuery(connection);
 //            simpleInsertWithExcecuteUpdate(connection);
-            simpleReadWithExecute(connection);
+//            simpleReadWithExecute(connection);
+//            simpleInsertWithParameterizedExcecuteUpdate(connection);
+            simpleReadWithParameterizedExecuteQuery(connection);
         } catch (SQLException e) {
-
+    throw new RuntimeException(e);
         }
     }
 
@@ -112,5 +114,43 @@ public class Main {
             System.out.println();
         }
 
+    }
+
+/*
+* PARAMETERIZING
+* */
+// CREATE
+private static void simpleInsertWithParameterizedExcecuteUpdate(Connection connection) throws SQLException {
+//    String sql = "INSERT INTO actors (first_name, last_name) VALUES (?, ?)";
+    String sql = "INSERT INTO city (city, country_id) VALUES (?, ?)";
+
+    var preparedStatement = connection.prepareStatement(sql);
+
+    preparedStatement.setString(1, "Mbabane");
+    preparedStatement.setInt(2, 111);
+
+    int result = preparedStatement.executeUpdate();
+
+    if (result > 0) {
+        System.out.println("Update database");
+    } else {
+        System.out.println("No update");
+    }
+}
+
+    // READ SELECT
+    private static void simpleReadWithParameterizedExecuteQuery(Connection connection) throws SQLException {
+        String sql = "select first_name, last_name from actor where last_name like ?";
+
+        PreparedStatement statement = connection.prepareStatement(sql);
+//        statement.setString(1, "%ashingto%"); // has no data
+        statement.setString(1, "%ag%");
+
+        ResultSet resultSet = statement.executeQuery();
+
+        while(resultSet.next()) {
+            System.out.println(".");
+        }
+        System.out.println();
     }
 }
