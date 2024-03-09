@@ -1,6 +1,18 @@
 package org.example;
 
+import com.sun.net.httpserver.HttpServer;
+
+import java.io.IOException;
+import java.net.InetSocketAddress;
 import java.sql.*;
+
+import com.sun.net.httpserver.HttpServer;
+import com.sun.net.httpserver.HttpHandler;
+import com.sun.net.httpserver.HttpExchange;
+
+import java.io.IOException;
+import java.io.OutputStream;
+import java.net.InetSocketAddress;
 
 public class Main {
 //    public static void main(String[] args) {
@@ -22,8 +34,24 @@ public class Main {
 //
 //    }
 
-    public static void main(String[] args) {
-        try(Connection connection = DriverManager.getConnection(Application.url, Application.userName, Application.password)) {
+    public static void main(String[] args) throws IOException {
+        HttpServer server = HttpServer.create(new InetSocketAddress(8000), 0);
+
+        server.createContext("/greet", new HttpHandler() {
+            @Override
+            public void handle(HttpExchange exchange) throws IOException {
+                String response = "Hello, World!";
+                exchange.sendResponseHeaders(200, response.getBytes().length);
+                OutputStream os = exchange.getResponseBody();
+                os.write(response.getBytes());
+                os.close();
+            }
+        });
+
+        server.createContext("/querydb", new HttpHandler() {
+            @Override
+            public void handle(HttpExchange exchange) throws IOException {
+                        try(Connection connection = DriverManager.getConnection(Application.url, Application.userName, Application.password)) {
 //            simpleDeleteWithExcecuteUpdate(connection);
 //                        simpleUpdateWithExcecuteUpdate(connection);
 //                        simpleReadWithExecuteQuery(connection);
@@ -34,6 +62,18 @@ public class Main {
         } catch (SQLException e) {
     throw new RuntimeException(e);
         }
+                String response = "Spoke to DB Successfully";
+                exchange.sendResponseHeaders(200, response.getBytes().length);
+                OutputStream os = exchange.getResponseBody();
+                os.write(response.getBytes());
+                os.close();
+            }
+        });
+
+        // Start the server
+        server.start();
+        System.out.println("Server is listening on port 8000");
+
     }
 
 
