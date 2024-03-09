@@ -3,6 +3,7 @@ package org.example;
 import com.sun.net.httpserver.HttpServer;
 
 import java.io.IOException;
+import java.lang.reflect.Type;
 import java.net.InetSocketAddress;
 import java.sql.*;
 
@@ -59,7 +60,8 @@ public class Main {
 //            simpleInsertWithExcecuteUpdate(connection);
 //            simpleReadWithExecute(connection);
 //            simpleInsertWithParameterizedExcecuteUpdate(connection);
-            responseText = simpleReadWithParameterizedExecuteQuery(connection);
+//                    insertAction(connection, "Lui Kang", null); // TODO debug
+//            responseText = simpleReadWithParameterizedExecuteQuery(connection);
 //                      simpleReadWithParameterizedExecuteQueryAnCountIndex(connection);
                 } catch (SQLException e) {
                     throw new RuntimeException(e);
@@ -220,5 +222,21 @@ public class Main {
             System.out.println("The number of staff employed is " + resultSet.getInt("count"));
         }
         System.out.println();
+    }
+
+    private static void insertAction(Connection conn, String firstName, String lastName) throws SQLException{
+        var sql = "insert into actor (first_name, last_name) values (?, ?)";
+
+        try(PreparedStatement ps = conn.prepareStatement(sql)) {
+            ps.setString(1, firstName);
+
+            if(lastName != null) {
+                ps.setString(1, lastName);
+            } else {
+                ps.setNull(2, Types.CHAR);
+            }
+
+            ps.executeUpdate();
+        }
     }
 }
