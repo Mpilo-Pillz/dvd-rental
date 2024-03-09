@@ -51,19 +51,21 @@ public class Main {
         server.createContext("/querydb", new HttpHandler() {
             @Override
             public void handle(HttpExchange exchange) throws IOException {
-                        try(Connection connection = DriverManager.getConnection(Application.url, Application.userName, Application.password)) {
+                String responseText = "";
+                try (Connection connection = DriverManager.getConnection(Application.url, Application.userName, Application.password)) {
 //            simpleDeleteWithExcecuteUpdate(connection);
 //                        simpleUpdateWithExcecuteUpdate(connection);
 //                        simpleReadWithExecuteQuery(connection);
 //            simpleInsertWithExcecuteUpdate(connection);
 //            simpleReadWithExecute(connection);
 //            simpleInsertWithParameterizedExcecuteUpdate(connection);
-//            simpleReadWithParameterizedExecuteQuery(connection);
-                            simpleReadWithParameterizedExecuteQueryAnCountIndex(connection);
-        } catch (SQLException e) {
-    throw new RuntimeException(e);
-        }
-                String response = "Spoke to DB Successfully";
+            responseText = simpleReadWithParameterizedExecuteQuery(connection);
+//                      simpleReadWithParameterizedExecuteQueryAnCountIndex(connection);
+                } catch (SQLException e) {
+                    throw new RuntimeException(e);
+                }
+//                String response = "Spoke to DB Successfully";
+                String response = responseText;
                 exchange.sendResponseHeaders(200, response.getBytes().length);
                 OutputStream os = exchange.getResponseBody();
                 os.write(response.getBytes());
@@ -76,7 +78,6 @@ public class Main {
         System.out.println("Server is listening on port 8000");
 
     }
-
 
 
     // DELETE
@@ -132,7 +133,7 @@ public class Main {
 
         ResultSet resultSet = statement.executeQuery();
 
-        while(resultSet.next()) {
+        while (resultSet.next()) {
             System.out.println(".");
         }
         System.out.println();
@@ -149,7 +150,7 @@ public class Main {
 
         if (result) {
             var resultSet = statement.getResultSet();
-            while(resultSet.next()) {
+            while (resultSet.next()) {
                 System.out.println("." + resultSet);
             }
             System.out.println();
@@ -157,30 +158,31 @@ public class Main {
 
     }
 
-/*
-* PARAMETERIZING
-* */
+    /*
+     * PARAMETERIZING
+     * */
 // CREATE
-private static void simpleInsertWithParameterizedExcecuteUpdate(Connection connection) throws SQLException {
+    private static void simpleInsertWithParameterizedExcecuteUpdate(Connection connection) throws SQLException {
 //    String sql = "INSERT INTO actors (first_name, last_name) VALUES (?, ?)";
-    String sql = "INSERT INTO city (city, country_id) VALUES (?, ?)";
+        String sql = "INSERT INTO city (city, country_id) VALUES (?, ?)";
 
-    var preparedStatement = connection.prepareStatement(sql);
+        var preparedStatement = connection.prepareStatement(sql);
 
-    preparedStatement.setString(1, "Mbabane");
-    preparedStatement.setInt(2, 111);
+        preparedStatement.setString(1, "Mbabane");
+        preparedStatement.setInt(2, 111);
 
-    int result = preparedStatement.executeUpdate();
+        int result = preparedStatement.executeUpdate();
 
-    if (result > 0) {
-        System.out.println("Update database");
-    } else {
-        System.out.println("No update");
+        if (result > 0) {
+            System.out.println("Update database");
+        } else {
+            System.out.println("No update");
+        }
     }
-}
 
     // READ SELECT
-    private static void simpleReadWithParameterizedExecuteQuery(Connection connection) throws SQLException {
+    private static String simpleReadWithParameterizedExecuteQuery(Connection connection) throws SQLException {
+        String responseString = "";
         String sql = "select first_name, last_name from actor where last_name like ?";
 
         PreparedStatement statement = connection.prepareStatement(sql);
@@ -189,7 +191,7 @@ private static void simpleInsertWithParameterizedExcecuteUpdate(Connection conne
 
         ResultSet resultSet = statement.executeQuery();
 
-        while(resultSet.next()) {
+        while (resultSet.next()) {
 //            String first_name = resultSet.getString(1);
 //            String last_name = resultSet.getString(2);
             //            System.out.println(first_name + " " + last_name + " is in the db order matters");
@@ -200,8 +202,9 @@ private static void simpleInsertWithParameterizedExcecuteUpdate(Connection conne
 
 
             System.out.println(firstName + " " + lastName + " is in the db");
+            responseString += firstName + " " + lastName + " is in the db, ";
         }
-        System.out.println();
+        return responseString;
     }
 
     // READ SELECT
@@ -212,7 +215,7 @@ private static void simpleInsertWithParameterizedExcecuteUpdate(Connection conne
 
         ResultSet resultSet = statement.executeQuery();
 
-        if(resultSet.next()) {
+        if (resultSet.next()) {
 //            int last_name = resultSet.getInt(2);
             System.out.println("The number of staff employed is " + resultSet.getInt("count"));
         }
