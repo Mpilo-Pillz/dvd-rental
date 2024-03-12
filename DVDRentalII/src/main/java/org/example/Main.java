@@ -4,6 +4,7 @@ import com.sun.net.httpserver.HttpExchange;
 import com.sun.net.httpserver.HttpHandler;
 import com.sun.net.httpserver.HttpServer;
 import org.example.handlers.GreetHandler;
+import org.example.handlers.QueryDbHandler;
 
 import java.io.IOException;
 import java.io.OutputStream;
@@ -19,26 +20,8 @@ public class Main {
         HttpServer server = HttpServer.create(inetSocketAddress, 0);
 
         // server Contexts
-
         server.createContext("/greet", new GreetHandler());
-
-        server.createContext("/querydb", new HttpHandler() {
-            @Override
-            public void handle(HttpExchange exchange) throws IOException {
-                String responseText = "";
-                try (Connection connection = DriverManager.getConnection(Application.url, Application.userName, Application.password)) {
-
-                } catch (SQLException e) {
-                    throw new RuntimeException(e);
-                }
-//                String response = "Spoke to DB Successfully";
-                String response = responseText;
-                exchange.sendResponseHeaders(200, response.getBytes().length);
-                OutputStream os = exchange.getResponseBody();
-                os.write(response.getBytes());
-                os.close();
-            }
-        });
+        server.createContext("/querydb", new QueryDbHandler());
 
         // Start the server
         server.start();
