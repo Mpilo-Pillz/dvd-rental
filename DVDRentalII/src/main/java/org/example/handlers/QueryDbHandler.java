@@ -3,6 +3,7 @@ package org.example.handlers;
 import com.sun.net.httpserver.HttpExchange;
 import com.sun.net.httpserver.HttpHandler;
 import org.example.Application;
+import org.example.db.DatabaseConfig;
 import org.example.utils.HttpHelper;
 
 import java.io.IOException;
@@ -15,6 +16,12 @@ public class QueryDbHandler implements HttpHandler {
     @Override
     public void handle(HttpExchange exchange) throws IOException {
         String responseText = "";
+        try {
+            Connection connection = DatabaseConfig.getConnection();
+        } catch (SQLException e) {
+            throw new RuntimeException(e);
+        }
+
         try (Connection connection = DriverManager.getConnection(Application.url, Application.userName, Application.password)) {
 
         } catch (SQLException e) {
