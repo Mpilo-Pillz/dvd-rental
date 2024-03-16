@@ -19,6 +19,7 @@ public class CreateHandler implements HttpHandler, DatabaseOperation {
     @Override
     public void execute(HttpExchange exchange) throws IOException {
         String sql = "INSERT INTO my_table (column1, column2) VALUES (?, ?)"; // TODO find a way to read from outside
+//      TODO See if I can Resuse QueryDbHandler
         try (Connection connection = DatabaseConfig.getConnection();
         PreparedStatement statement = connection.prepareStatement(sql)) {
             statement.setString(1, "valueArg");
