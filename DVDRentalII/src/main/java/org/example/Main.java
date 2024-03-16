@@ -1,18 +1,13 @@
 package org.example;
 
-import com.sun.net.httpserver.HttpExchange;
-import com.sun.net.httpserver.HttpHandler;
 import com.sun.net.httpserver.HttpServer;
 import org.example.handlers.GreetHandler;
 import org.example.handlers.QueryDbHandler;
+import org.example.handlers.crud.CreateHandler;
+import org.example.handlers.crud.ReadHandler;
 
 import java.io.IOException;
-import java.io.OutputStream;
 import java.net.InetSocketAddress;
-import java.sql.Connection;
-import java.sql.DriverManager;
-import java.sql.SQLException;
-
 public class Main {
     public static void main(String[] args) throws IOException {
         int serverPort = 8200;
@@ -22,6 +17,9 @@ public class Main {
         // server Contexts
         server.createContext("/greet", new GreetHandler());
         server.createContext("/querydb", new QueryDbHandler());
+
+        server.createContext("/create", new CreateHandler()); //TODO pherhaps injectt he sql query
+        server.createContext("/read", new ReadHandler());
 
         // Start the server
         server.start();
