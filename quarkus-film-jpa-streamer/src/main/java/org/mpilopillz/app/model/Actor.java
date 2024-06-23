@@ -13,7 +13,7 @@ public class Actor {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     @Id
     @Column(name = "actor_id")
-    private short actorId;
+    private int actorId;
     @Basic
     @Column(name = "first_name")
     private String firstName;
@@ -23,10 +23,10 @@ public class Actor {
     @Basic
     @Column(name = "last_update")
     private Timestamp lastUpdate;
-    @OneToMany(mappedBy = "actor")
+    @OneToMany(mappedBy = "actors")
     private Set<Film> films = new HashSet<>();
 
-    public short getActorId() {
+    public int getActorId() {
         return actorId;
     }
 
