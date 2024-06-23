@@ -1,0 +1,9 @@
+services:
+  postgres:
+    image: 'postgres:latest'
+    environment:
+      - 'POSTGRES_DB=dvdrental'
+      - 'POSTGRES_PASSWORD=mpilo'
+      - 'POSTGRES_USER=postgres'
+    ports:
+      - '5432'

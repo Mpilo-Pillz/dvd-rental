@@ -1,10 +1,10 @@
-package com.dvdrental.springbootdvdrentalapi;
+package com.mpilopillz.spring_boot_dvd_rental;
 
 import org.junit.jupiter.api.Test;
 import org.springframework.boot.test.context.SpringBootTest;
 
 @SpringBootTest
-class SpringbootDvdRentalApiApplicationTests {
+class SpringBootDvdRentalApplicationTests {
 
 	@Test
 	void contextLoads() {
