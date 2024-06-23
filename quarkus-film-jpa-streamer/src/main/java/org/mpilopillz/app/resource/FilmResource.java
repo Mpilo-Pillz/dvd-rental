@@ -11,12 +11,14 @@ import org.mpilopillz.app.repository.FilmRepository;
 
 import java.util.List;
 import java.util.Optional;
+import java.util.stream.Collectors;
 
 @Path("/")
 public class FilmResource {
 
     @Inject
     private FilmRepository filmRepository;
+
     @GET
     @Path("/sanityTest")
     @Produces(MediaType.TEXT_PLAIN)
@@ -33,9 +35,26 @@ public class FilmResource {
     }
 
     @GET
+    @Path("/film/em/{filmId}")
+    @Produces(MediaType.TEXT_PLAIN)
+    public String getFilmUsingEm(@PathParam("filmId") int filmId) {
+        Optional<Film> film = filmRepository.getFilm(filmId);
+        return film.isPresent() ? film.get().getTitle() : "Film not found";
+    }
+
+    @GET
     @Produces(MediaType.APPLICATION_JSON)
     public List<Film> getAllFilms() {
         return filmRepository.getAllFilms();
+    }
+
+    @GET
+    @Path("/pagedFilms/{page}/{minLength}")
+    @Produces(MediaType.TEXT_PLAIN)
+    public String paged(long page, short minLength) {
+        return filmRepository.paged(page, minLength)
+                .map(f -> String.format("%s (%d min)", f.getTitle(), f.getLength()))
+                .collect(Collectors.joining("\n"));
     }
 
 }
