@@ -1,6 +1,7 @@
 package org.mpilopillz.app.repository;
 
 import com.speedment.jpastreamer.application.JPAStreamer;
+import com.speedment.jpastreamer.streamconfiguration.StreamConfiguration;
 import jakarta.enterprise.context.ApplicationScoped;
 import jakarta.inject.Inject;
 import jakarta.persistence.EntityManager;
@@ -33,12 +34,20 @@ public class FilmRepository {
         return query.getResultList();
     }
 
+//    public Stream<Film> paged(long page, short minLength) {
+//    return jpaStreamer.stream(Film.class)
+//            .filter(Film$.length.greaterThan(minLength))
+//            .sorted(Film$.length)
+//            .skip(page * PAGE_SIZE)
+//            .limit(PAGE_SIZE);
+//    }
+
     public Stream<Film> paged(long page, short minLength) {
-    return jpaStreamer.stream(Film.class)
-            .filter(Film$.length.greaterThan(minLength))
-            .sorted(Film$.length)
-            .skip(page * PAGE_SIZE)
-            .limit(PAGE_SIZE);
+        return jpaStreamer.stream(Film.class)
+                .filter(Film$.length.greaterThan(minLength))
+                .sorted(Film$.length)
+                .skip(page * PAGE_SIZE)
+                .limit(PAGE_SIZE);
     }
 
     public Optional<Film> getFilmUsingEm(int filmId) {
@@ -51,6 +60,14 @@ public class FilmRepository {
         } catch (NoResultException e) {
             return Optional.empty();
         }
+    }
+
+    public Stream<Film> actors(String startsWith, short minLength) {
+        final StreamConfiguration<Film> sc =
+                StreamConfiguration.of(Film.class).joining(Film$.actors);
+        return jpaStreamer.stream(sc)
+                .filter(Film$.title.startsWith(startsWith).and(Film$.length.greaterThan(minLength)))
+                .sorted(Film$.length.reversed());
     }
 //    ELECT * FROM film WHERE film_id = :filmId
 //    public Optional<Film> getFilmUsingEm(int filmId) {
