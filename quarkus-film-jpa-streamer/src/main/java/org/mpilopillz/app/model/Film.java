@@ -22,7 +22,7 @@ public class Film {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     @Id
     @Column(name = "film_id")
-    private short filmId;
+    private int filmId;
     @Basic
     @Column(name = "title")
     private String title;
@@ -64,7 +64,7 @@ public class Film {
     )
     private List<Actor> actors = new ArrayList<>();
 
-    public short getFilmId() {
+    public int getFilmId() {
         return filmId;
     }
 
