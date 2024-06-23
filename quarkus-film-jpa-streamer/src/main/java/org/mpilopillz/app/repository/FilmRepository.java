@@ -7,9 +7,11 @@ import jakarta.inject.Inject;
 import jakarta.persistence.EntityManager;
 import jakarta.persistence.NoResultException;
 import jakarta.persistence.TypedQuery;
+import jakarta.transaction.Transactional;
 import org.mpilopillz.app.model.Film;
 import org.mpilopillz.app.model.Film$;
 
+import java.math.BigDecimal;
 import java.util.List;
 import java.util.Optional;
 import java.util.stream.Stream;
@@ -32,6 +34,12 @@ public class FilmRepository {
     public List<Film> getAllFilms() {
         TypedQuery<Film> query = entityManager.createQuery("SELECT f FROM Film f", Film.class);
         return query.getResultList();
+    }
+
+    public Stream<Film> getFilms(short minLength) {
+        return jpaStreamer.stream(Film.class)
+                .filter(Film$.length.greaterThan(minLength))
+                .sorted(Film$.length);
     }
 
 //    public Stream<Film> paged(long page, short minLength) {
@@ -69,6 +77,16 @@ public class FilmRepository {
                 .filter(Film$.title.startsWith(startsWith).and(Film$.length.greaterThan(minLength)))
                 .sorted(Film$.length.reversed());
     }
+
+    @Transactional
+    public void updateRentalRate(short minLength, BigDecimal rentalRate) {
+        jpaStreamer.stream(Film.class)
+                .filter(Film$.length.greaterThan(minLength))
+                .forEach(f -> {
+                    f.setRentalRate(rentalRate);
+                });
+    }
+
 //    ELECT * FROM film WHERE film_id = :filmId
 //    public Optional<Film> getFilmUsingEm(int filmId) {
 //        try {

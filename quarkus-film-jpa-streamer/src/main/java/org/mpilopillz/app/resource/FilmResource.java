@@ -9,6 +9,7 @@ import jakarta.ws.rs.core.MediaType;
 import org.mpilopillz.app.model.Film;
 import org.mpilopillz.app.repository.FilmRepository;
 
+import java.math.BigDecimal;
 import java.util.List;
 import java.util.Optional;
 import java.util.stream.Collectors;
@@ -68,6 +69,16 @@ public class FilmResource {
                         f.getActors().stream()
                                 .map(a -> String.format("%s %s", a.getFirstName(), a.getLastName()))
                                 .collect(Collectors.joining(", "))))
+                .collect(Collectors.joining("\n"));
+    }
+
+    @GET
+    @Path("/update/{minLength}/{rentalRate}")
+    @Produces(MediaType.TEXT_PLAIN)
+    public String update(short minLength, BigDecimal rentalRate) {
+        filmRepository.updateRentalRate(minLength, rentalRate);
+        return filmRepository.getFilms(minLength)
+                .map(f -> String.format("%s (%d min) - $%f", f.getTitle(), f.getLength(), f.getRentalRate()))
                 .collect(Collectors.joining("\n"));
     }
 
